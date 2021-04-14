@@ -36,3 +36,25 @@ document.addEventListener('keydown', function (e) {
         closeModal();
     }
 });
+
+///////////////////////////////////////
+// Smooth scroll //////////////////////
+btnScrollTo.addEventListener('click', function (e) {
+    section1.scrollIntoView({ behaviour: 'smooth' });
+});
+
+///////////////////////////////////////
+// Page navigation ////////////////////
+
+// Event delegation
+// 1. Add event listener to common parent element
+// 2. Determine what element originated the event
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+    console.log(e.target);
+    e.preventDefault();
+    // Matching strategy
+    if (e.target.classList.contains('nav__link')){
+        const id = e.target.getAttribute('href');
+        document.querySelector(id).scrollIntoView( { behavior: 'smooth'});
+    }
+})
