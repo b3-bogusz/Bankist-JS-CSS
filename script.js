@@ -163,9 +163,75 @@ const imgObserver = new IntersectionObserver(loadImg, {
 imgTargets.forEach(img => imgObserver.observe(img));
 
 
+///////////////////////////////////////
+// Slider component
+const slides = document.querySelectorAll('.slide')
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
+const dotContainer = document.querySelector('.dots');
+let currSlide = 0;
+const maxSlide = slides.length;
 
+// dots
+const createDots = function () {
+    slides.forEach(function (_, i) {
+        dotContainer.insertAdjacentHTML('beforeend',
+        `
+            <button class="dots__dot" data-slide="${i}"></button>
+            `);
+    });
+};
+createDots();
 
+const activateDot = function (slide) {
+    document.querySelectorAll('.dots__dot')
+        .forEach(dot => dot.classList
+            .remove('dots__dot--active'));
 
+    document.querySelector(`.dots__dot[data-slide="${slide}"]`).classList.add('dots__dot--active');
+}
+activateDot(0);
 
+const goToSlide = function (slide) {
+    slides.forEach((slide, i) =>
+        slide.style.transform = `translateX(${100 * (i - currSlide)}%)`);
+}
+// positioning each slide
+goToSlide(0);
 
+// Next slide
+const nextSlide = function () {
+    if (currSlide === maxSlide - 1) {
+        currSlide = 0;
+    } else {
+        currSlide++;
+    }
+    goToSlide(currSlide);
+    activateDot(currSlide);
+}
 
+const previousSlide = function () {
+    if (currSlide === 0) {
+        currSlide = maxSlide - 1;
+    } else {
+        currSlide--;
+    }
+    goToSlide(currSlide);
+    activateDot(currSlide);
+};
+
+btnRight.addEventListener('click', nextSlide);
+btnLeft.addEventListener('click', previousSlide);
+
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowLeft') previousSlide();
+    e.key === 'ArrowRight' && nextSlide();
+})
+
+dotContainer.addEventListener('click', function (e) {
+    if (e.target.classList.contains('dots__dot')){
+        const {slide} = e.target.dataset;
+        goToSlide(slide);
+        activateDot(slide);
+    }
+})
